@@ -51,14 +51,14 @@ export default function ColorSelector({ showImageSection = true }: ColorSelector
 
   return (
     <div className="relative w-full h-full flex items-center justify-center [&_.backface-hidden]:backface-visibility-hidden">
-      <div className="w-full py-8">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-center gap-12">
+      <div className="w-full h-full py-2 md:py-4 lg:py-8">
+        <div className="container h-full mx-auto px-2 sm:px-2 md:px-4">
+          <div className="flex flex-col lg:flex-row items-center justify-center h-full gap-4 lg:gap-12">
             {/* Image Section */}
-            <div className="flex-1 flex justify-center items-center pl-16 pt-12 relative">
+            <div className="flex-1 flex justify-center items-center w-full h-full max-w-3xl overflow-hidden"> 
               <div 
                 onClick={handleFlip} 
-                className="relative cursor-pointer"
+                className="relative cursor-pointer w-[140%] h-full flex items-center justify-center"
                 style={{ 
                   transform: `rotateY(${flipRotation}deg)`,
                   transition: 'transform 1000ms',
@@ -68,35 +68,38 @@ export default function ColorSelector({ showImageSection = true }: ColorSelector
                 <Image
                   src={selectedColor.image}
                   alt={`REZERO Scooter in ${selectedColor.id}`}
-                  width={900}
-                  height={900}
-                  className="w-auto h-full object-contain max-w-[900px]"
+                  width={1500}
+                  height={930}
+                  className="w-full h-auto object-contain max-h-[75vh] md:max-h-[80vh] lg:max-h-[85vh]"
                   style={{ 
-                    backfaceVisibility: 'hidden'
+                    backfaceVisibility: 'hidden',
+                    transform: 'scale(0.9)'
                   }}
                   priority
                 />
                 <Image
                   src={selectedColor.image}
                   alt={`REZERO Scooter in ${selectedColor.id} - Back`}
-                  width={900}
-                  height={900}
-                  className="w-auto h-full object-contain max-w-[900px] absolute top-0 left-0"
+                  width={1500}
+                  height={930}
+                  className="w-full h-auto object-contain max-h-[75vh] md:max-h-[80vh] lg:max-h-[85vh] absolute top-0 left-0"
                   style={{ 
-                    transform: 'rotateY(180deg) scaleX(-1)',
+                    transform: 'rotateY(180deg) scaleX(-1) scale(0.9)',
                     backfaceVisibility: 'hidden'
                   }}
                   priority
                 />
               </div>
               {/* Floor Shadow */}
-              <div className="absolute bottom-0 w-[50%] h-4 bg-black/80 blur-xl rounded-full" />
+              <div className="absolute bottom-8 md:bottom-20 lg:bottom-24 w-[85%] md:w-[80%] lg:w-[50%] h-4 bg-black/80 blur-xl rounded-full" />
             </div>
             
             {/* Color Selection Section */}
             <div 
               ref={containerRef}
-              className="flex flex-col items-center gap-6 relative ml-8 flex-shrink-0"
+              className="fixed bottom-0 left-0 right-0 lg:relative lg:bottom-auto lg:left-auto lg:right-auto
+                flex flex-row justify-center lg:flex-col items-center gap-3 lg:gap-6 lg:ml-6 flex-shrink-0 
+                p-3 lg:p-0 translate-y-[-10vh] lg:translate-y-0"
             >
               {/* Color Buttons with Enhanced Animation */}
               {colors.map((color, index) => (
@@ -104,8 +107,8 @@ export default function ColorSelector({ showImageSection = true }: ColorSelector
                   key={color.id}
                   ref={el => circleRefs.current[index] = el}
                   onClick={() => handleColorChange(color)}
-                  className={`relative w-16 h-16 transition-all duration-300 cursor-pointer border-2 border-white
-                    ${selectedColor.id === color.id ? 'scale-110 ring-4 ring-primary ' : 'hover:scale-125'}`}
+                  className={`relative w-12 h-12 lg:w-16 lg:h-16 transition-all duration-300 cursor-pointer border-2 border-white
+                    ${selectedColor.id === color.id ? 'scale-110 ring-4 ring-primary' : 'hover:scale-125'}`}
                 >
                   <Image
                     src={color.image}
