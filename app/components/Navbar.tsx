@@ -28,9 +28,21 @@ export default function Navbar() {
               <Link href="#contact" className="text-primary hover:text-primary/80 px-3 py-2 rounded-md text-sm font-medium">
                 Contact
               </Link>
+              <Link 
+                href="#order" 
+                className="bg-black text-white hover:bg-black/90 px-4 py-2 rounded-md text-sm font-medium transition-colors"
+              >
+                Order Now
+              </Link>
             </div>
           </div>
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center gap-4">
+            <Link 
+              href="#order" 
+              className="bg-black text-white hover:bg-black/90 px-3 py-1.5 rounded-md text-xs font-medium transition-colors"
+            >
+              Order Now
+            </Link>
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="inline-flex items-center justify-center p-2 rounded-md text-primary hover:text-primary/80 focus:outline-none"
@@ -64,6 +76,13 @@ export default function Navbar() {
               onClick={() => setIsOpen(false)}
             >
               Contact
+            </Link>
+            <Link
+              href="#order"
+              className="bg-black text-white hover:bg-black/90 block px-4 py-2 rounded-md text-base font-medium transition-colors"
+              onClick={() => setIsOpen(false)}
+            >
+              Order Now
             </Link>
           </div>
         </div>

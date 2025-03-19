@@ -58,37 +58,53 @@ export default function ColorSelector({ showImageSection = true }: ColorSelector
             <div className="flex-1 flex justify-center items-center w-full h-full max-w-3xl overflow-hidden"> 
               <div 
                 onClick={handleFlip} 
-                className="relative cursor-pointer w-[140%] h-full flex items-center justify-center"
+                className="relative cursor-pointer w-[140%] h-full flex items-center justify-center select-none"
                 style={{ 
+                  transformStyle: 'preserve-3d',
                   transform: `rotateY(${flipRotation}deg)`,
                   transition: 'transform 1000ms',
-                  transformStyle: 'preserve-3d'
+                  WebkitTapHighlightColor: 'transparent'
                 }}
               >
-                <Image
-                  src={selectedColor.image}
-                  alt={`REZERO Scooter in ${selectedColor.id}`}
-                  width={1500}
-                  height={930}
-                  className="w-full h-auto object-contain max-h-[75vh] md:max-h-[80vh] lg:max-h-[85vh]"
-                  style={{ 
-                    backfaceVisibility: 'hidden',
-                    transform: 'scale(0.9)'
-                  }}
-                  priority
-                />
-                <Image
-                  src={selectedColor.image}
-                  alt={`REZERO Scooter in ${selectedColor.id} - Back`}
-                  width={1500}
-                  height={930}
-                  className="w-full h-auto object-contain max-h-[75vh] md:max-h-[80vh] lg:max-h-[85vh] absolute top-0 left-0"
-                  style={{ 
-                    transform: 'rotateY(180deg) scaleX(-1) scale(0.9)',
-                    backfaceVisibility: 'hidden'
-                  }}
-                  priority
-                />
+                <div className="relative w-full h-full" style={{ animation: 'float 3s ease-in-out infinite' }}>
+                  <style jsx global>{`
+                    @keyframes float {
+                      0% {
+                        transform: translateY(0px);
+                      }
+                      50% {
+                        transform: translateY(-20px);
+                      }
+                      100% {
+                        transform: translateY(0px);
+                      }
+                    }
+                  `}</style>
+                  <Image
+                    src={selectedColor.image}
+                    alt={`REZERO Scooter in ${selectedColor.id}`}
+                    width={1500}
+                    height={930}
+                    className="w-full h-auto object-contain max-h-[75vh] md:max-h-[80vh] lg:max-h-[85vh]"
+                    style={{ 
+                      backfaceVisibility: 'hidden',
+                      transform: 'scale(0.9)'
+                    }}
+                    priority
+                  />
+                  <Image
+                    src={selectedColor.image}
+                    alt={`REZERO Scooter in ${selectedColor.id} - Back`}
+                    width={1500}
+                    height={930}
+                    className="w-full h-auto object-contain max-h-[75vh] md:max-h-[80vh] lg:max-h-[85vh] absolute top-0 left-0"
+                    style={{ 
+                      transform: 'rotateY(180deg) scaleX(-1) scale(0.9)',
+                      backfaceVisibility: 'hidden'
+                    }}
+                    priority
+                  />
+                </div>
               </div>
               {/* Floor Shadow */}
               <div className="absolute bottom-8 md:bottom-20 lg:bottom-24 w-[85%] md:w-[80%] lg:w-[50%] h-4 bg-black/80 blur-xl rounded-full" />
