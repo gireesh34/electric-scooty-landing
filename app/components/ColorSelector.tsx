@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { Zap } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import gsap from "gsap";
 
 const colors = [
@@ -17,8 +17,10 @@ interface ColorSelectorProps {
 }
 
 export default function ColorSelector({ showImageSection = true }: ColorSelectorProps) {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
   const [selectedColor, setSelectedColor] = useState(colors[0]);
-  const [rotation, setRotation] = useState(0);
   const [flipRotation, setFlipRotation] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [flipCount, setFlipCount] = useState(0);
@@ -26,6 +28,10 @@ export default function ColorSelector({ showImageSection = true }: ColorSelector
   const circleRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const linesRef = useRef(null);
   const centralCircleRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -36,95 +42,170 @@ export default function ColorSelector({ showImageSection = true }: ColorSelector
     };
   }, []);
 
-  const handleColorChange = (color: typeof colors[0]) => {
-    if (color.id !== selectedColor.id) {
-      setSelectedColor(color);
-      setRotation(rotation + 90);
-    }
-  };
-
   const handleFlip = () => {
     setIsFlipped(prev => !prev);
     setFlipCount(prev => prev + 1);
     setFlipRotation(prev => (flipCount + 1) * 180);
   };
 
+  const calculateImageStyles = (index: number) => {
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 1024;
+    const position = index - selectedIndex;
+    
+    if (isMobile) {
+      return {
+        position: 'absolute',
+        left: '50%',
+        transform: isLoaded 
+          ? `translateX(-50%) translateX(${position * 100}%) scale(${position === 0 ? 1 : 0})`
+          : `translateX(-50%) translateX(0%) scale(${index === 0 ? 1 : 0})`,
+        width: '100%',
+        height: '100%',
+        zIndex: position === 0 ? 10 : 5,
+        opacity: isLoaded 
+          ? (position === 0 ? 1 : 0)
+          : (index === 0 ? 1 : 0),
+        transition: isLoaded ? 'all 0.5s ease-out' : 'none',
+        pointerEvents: isAnimating ? 'none' : 'auto',
+        perspective: '2000px',
+      } as const;
+    }
+
+    return {
+      position: 'absolute',
+      left: '50%',
+      transform: `
+        translateX(-50%)
+        translateX(${position * 60}%)
+        translateZ(${position === 0 ? 0 : -200}px)
+        scale(${position === 0 ? 1 : 0.8})
+        rotateY(${position * -15}deg)
+      `,
+      zIndex: position === 0 ? 10 : 5,
+      opacity: Math.abs(position) > 1 ? 0 : 1,
+      transition: 'all 0.5s ease-out',
+      filter: position === 0 ? 'none' : 'brightness(0.7)',
+      perspective: '2000px',
+    } as const;
+  };
+
+  const handleColorChange = (color: typeof colors[0], index: number) => {
+    if (index !== selectedIndex && !isAnimating) {
+      setIsAnimating(true);
+      setSelectedIndex(index);
+      setSelectedColor(color);
+      setIsFlipped(false); // Reset flip when color changes
+      setFlipRotation(0);
+      
+      setTimeout(() => {
+        setIsAnimating(false);
+      }, 500);
+    }
+  };
+
   return (
-    <div className="relative w-full h-full flex items-center justify-center [&_.backface-hidden]:backface-visibility-hidden">
-      <div className="w-full h-full py-2 md:py-4 lg:py-8">
-        <div className="container h-full mx-auto px-2 sm:px-2 md:px-4">
+    <div className="relative w-full h-full flex items-center justify-center overflow-hidden lg:overflow-visible [perspective:2000px] [transform-style:preserve-3d]">
+      <div className="w-full h-full py-2 md:py-4 lg:py-8 overflow-x-hidden lg:overflow-x-visible">
+        <div className="container h-full mx-auto px-2 sm:px-2 md:px-4 relative">
           <div className="flex flex-col lg:flex-row items-center justify-center h-full gap-4 lg:gap-12">
-            {/* Image Section */}
-            <div className="flex-1 flex justify-center items-center w-full h-full max-w-3xl overflow-hidden"> 
-              <div 
-                onClick={handleFlip} 
-                className="relative cursor-pointer w-[140%] h-full flex items-center justify-center select-none"
-                style={{ 
-                  transformStyle: 'preserve-3d',
-                  transform: `rotateY(${flipRotation}deg)`,
-                  transition: 'transform 1000ms',
-                  WebkitTapHighlightColor: 'transparent'
-                }}
-              >
-                <div className="relative w-full h-full" style={{ animation: 'float 3s ease-in-out infinite' }}>
-                  <style jsx global>{`
-                    @keyframes float {
-                      0% {
-                        transform: translateY(0px);
-                      }
-                      50% {
-                        transform: translateY(-20px);
-                      }
-                      100% {
-                        transform: translateY(0px);
-                      }
-                    }
-                  `}</style>
-                  <Image
-                    src={selectedColor.image}
-                    alt={`REZERO Scooter in ${selectedColor.id}`}
-                    width={1500}
-                    height={930}
-                    className="w-full h-auto object-contain max-h-[75vh] md:max-h-[80vh] lg:max-h-[85vh]"
-                    style={{ 
-                      backfaceVisibility: 'hidden',
-                      transform: 'scale(0.9)'
+            {/* Image Carousel Section */}
+            <div className="flex-1 flex justify-center items-center w-full h-full max-w-5xl [perspective:2000px]">
+              <div className="relative w-full h-[50vh] md:h-[60vh] lg:h-[80vh] [transform-style:preserve-3d]">
+                {colors.map((color, index) => (
+                  <div
+                    key={color.id}
+                    className={`absolute w-full h-full cursor-pointer [transform-style:preserve-3d] select-none 
+                    touch-none [-webkit-tap-highlight-color:transparent] ${
+                      !isLoaded && index !== 0 ? 'invisible' : ''
+                    }`}
+                    style={{
+                      ...calculateImageStyles(index),
+                      WebkitTapHighlightColor: 'transparent',
+                      touchAction: 'none'
                     }}
-                    priority
-                  />
-                  <Image
-                    src={selectedColor.image}
-                    alt={`REZERO Scooter in ${selectedColor.id} - Back`}
-                    width={1500}
-                    height={930}
-                    className="w-full h-auto object-contain max-h-[75vh] md:max-h-[80vh] lg:max-h-[85vh] absolute top-0 left-0"
-                    style={{ 
-                      transform: 'rotateY(180deg) scaleX(-1) scale(0.9)',
-                      backfaceVisibility: 'hidden'
-                    }}
-                    priority
-                  />
-                </div>
+                    onClick={() => selectedIndex === index ? handleFlip() : handleColorChange(color, index)}
+                  >
+                    <div 
+                      className="relative w-full h-full [transform-style:preserve-3d]"
+                      style={{ 
+                        transform: selectedIndex === index ? `rotateY(${flipRotation}deg)` : 'none',
+                        transition: 'transform 1000ms cubic-bezier(0.4, 0, 0.2, 1)',
+                        transformStyle: 'preserve-3d',
+                        transformOrigin: 'center',
+                        animation: selectedIndex === index ? 'float 3s ease-in-out infinite' : 'none'
+                      }}
+                    >
+                      <div className="absolute inset-0 [transform-style:preserve-3d] [backface-visibility:hidden]">
+                        <Image
+                          src={color.image}
+                          alt={`REZERO Scooter in ${color.id}`}
+                          fill
+                          className="object-contain"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
+                          priority={index === 0}
+                          loading={index === 0 ? "eager" : "lazy"}
+                        />
+                      </div>
+                      <div 
+                        className="absolute inset-0 [transform-style:preserve-3d] [backface-visibility:hidden]"
+                        style={{ transform: 'rotateY(180deg)' }}
+                      >
+                        <Image
+                          src={color.image}
+                          alt={`REZERO Scooter in ${color.id} - Back`}
+                          fill
+                          className="object-contain"
+                          style={{ transform: 'scaleX(-1)' }}
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
+                          priority={index === 0}
+                          loading={index === 0 ? "eager" : "lazy"}
+                        />
+                      </div>
+                    </div>
+                    
+                    {selectedIndex === index && (
+                      <div 
+                        className="absolute bottom-4 md:bottom-6 lg:bottom-8 left-1/2 -translate-x-1/2 w-[85%] md:w-[80%] lg:w-[50%] h-4 bg-black/80 blur-xl rounded-full"
+                        style={{
+                          animation: 'shadowFloat 3s ease-in-out infinite'
+                        }}
+                      />
+                    )}
+                  </div>
+                ))}
               </div>
-              {/* Floor Shadow */}
-              <div className="absolute bottom-8 md:bottom-20 lg:bottom-24 w-[85%] md:w-[80%] lg:w-[50%] h-4 bg-black/80 blur-xl rounded-full" />
+              
+              {/* Navigation Arrows - Desktop only */}
+              <button
+                onClick={() => handleColorChange(colors[(selectedIndex - 1 + colors.length) % colors.length], (selectedIndex - 1 + colors.length) % colors.length)}
+                className="hidden lg:block absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background/90 transition-colors"
+                disabled={isAnimating}
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+              <button
+                onClick={() => handleColorChange(colors[(selectedIndex + 1) % colors.length], (selectedIndex + 1) % colors.length)}
+                className="hidden lg:block absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background/90 transition-colors"
+                disabled={isAnimating}
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
             </div>
-            
+
             {/* Color Selection Section */}
             <div 
               ref={containerRef}
-              className="fixed bottom-16 sm:bottom-8 left-0 right-0
-                flex flex-row justify-center items-center gap-4 md:gap-6 lg:gap-8
-                p-3 "
+              className="absolute bottom-4 sm:bottom-6 md:bottom-8 lg:bottom-10 left-0 right-0
+                flex flex-row justify-center items-center gap-3 sm:gap-4 md:gap-6 lg:gap-8
+                p-2 sm:p-3 z-20"
             >
-              {/* Color Buttons with Enhanced Animation */}
               {colors.map((color, index) => (
                 <button
                   key={color.id}
                   ref={el => circleRefs.current[index] = el}
-                  onClick={() => handleColorChange(color)}
-                  className={`relative w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 transition-all duration-300 cursor-pointer rounded-full
-                    ${selectedColor.id === color.id ? 'scale-110 ring-2 ring-primary' : 'hover:scale-125'}`}
+                  onClick={() => handleColorChange(color, index)}
+                  className={`relative w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 transition-all duration-300 cursor-pointer rounded-full
+                    ${selectedIndex === index ? 'scale-110 ring-2 ring-primary' : 'hover:scale-125'}`}
                   style={{
                     background: color.id === 'green' ? 'radial-gradient(circle at 30% 30%, #a4cc78 0%, #658246 100%)' :
                               color.id === 'yellow' ? 'radial-gradient(circle at 30% 30%, #e6c447 0%, #ac942a 100%)' :
@@ -135,7 +216,7 @@ export default function ColorSelector({ showImageSection = true }: ColorSelector
                 >
                   <div
                     className={`absolute inset-0 rounded-full transition-transform duration-300
-                      ${selectedColor.id === color.id ? 'scale-110' : 'scale-100'}`}
+                      ${selectedIndex === index ? 'scale-110' : 'scale-100'}`}
                     style={{
                       background: 'linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%, rgba(0,0,0,0.2) 100%)'
                     }}
@@ -146,6 +227,26 @@ export default function ColorSelector({ showImageSection = true }: ColorSelector
           </div>
         </div>
       </div>
+      <style jsx global>{`
+        @keyframes float {
+          0%, 100% { 
+            transform: translateY(0px) rotateY(${flipRotation}deg);
+          }
+          50% { 
+            transform: translateY(-20px) rotateY(${flipRotation}deg);
+          }
+        }
+        @keyframes shadowFloat {
+          0%, 100% { 
+            transform: translateX(-50%) scale(1);
+            opacity: 0.8;
+          }
+          50% { 
+            transform: translateX(-50%) scale(0.85);
+            opacity: 0.6;
+          }
+        }
+      `}</style>
     </div>
   );
 }

@@ -79,8 +79,12 @@ const config: Config = {
           },
         },
         float: {
-          '0%, 100%': { transform: 'translateY(0) rotateY(var(--rotation, 0deg))' },
-          '50%': { transform: 'translateY(-20px) rotateY(var(--rotation, 0deg))' },
+          '0%, 100%': { 
+            transform: 'translate(-50%, 0px)' 
+          },
+          '50%': { 
+            transform: 'translate(-50%, -20px)' 
+          }
         },
       },
       animation: {
