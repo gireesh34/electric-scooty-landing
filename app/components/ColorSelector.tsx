@@ -113,9 +113,9 @@ export default function ColorSelector({ showImageSection = true }: ColorSelector
             {/* Color Selection Section */}
             <div 
               ref={containerRef}
-              className="fixed bottom-0 left-0 right-0 lg:relative lg:bottom-auto lg:left-auto lg:right-auto
-                flex flex-row justify-center lg:flex-col items-center gap-3 lg:gap-6 lg:ml-6 flex-shrink-0 
-                p-3 lg:p-0 translate-y-[-10vh] lg:translate-y-0"
+              className="fixed bottom-16 sm:bottom-8 left-0 right-0
+                flex flex-row justify-center items-center gap-4 md:gap-6 lg:gap-8
+                p-3 "
             >
               {/* Color Buttons with Enhanced Animation */}
               {colors.map((color, index) => (
@@ -123,14 +123,14 @@ export default function ColorSelector({ showImageSection = true }: ColorSelector
                   key={color.id}
                   ref={el => circleRefs.current[index] = el}
                   onClick={() => handleColorChange(color)}
-                  className={`relative w-12 h-12 lg:w-16 lg:h-16 transition-all duration-300 cursor-pointer rounded-full
-                    ${selectedColor.id === color.id ? 'scale-110 ring-4 ring-primary' : 'hover:scale-125'}`}
+                  className={`relative w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 transition-all duration-300 cursor-pointer rounded-full
+                    ${selectedColor.id === color.id ? 'scale-110 ring-2 ring-primary' : 'hover:scale-125'}`}
                   style={{
-                    background: color.id === 'green' ? 'radial-gradient(circle at 30% 30%,rgb(154, 199, 107) 0%, #658246 100%)' :
+                    background: color.id === 'green' ? 'radial-gradient(circle at 30% 30%, #a4cc78 0%, #658246 100%)' :
                               color.id === 'yellow' ? 'radial-gradient(circle at 30% 30%, #e6c447 0%, #ac942a 100%)' :
                               color.id === 'red' ? 'radial-gradient(circle at 30% 30%, #a04950 0%, #652c31 100%)' :
                               color.id === 'silver' ? 'radial-gradient(circle at 30% 30%, #d6d3d2 0%, #aba8a7 100%)' : 'transparent',
-                    boxShadow: 'inset -4px -4px 8px rgba(0,0,0,0.3), inset 4px 4px 8px rgba(255,255,255,0.2)'
+                    boxShadow: 'inset -3px -3px 6px rgba(0,0,0,0.3), inset 3px 3px 6px rgba(255,255,255,0.2)'
                   }}
                 >
                   <div
