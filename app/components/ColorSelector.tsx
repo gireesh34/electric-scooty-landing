@@ -123,19 +123,22 @@ export default function ColorSelector({ showImageSection = true }: ColorSelector
                   key={color.id}
                   ref={el => circleRefs.current[index] = el}
                   onClick={() => handleColorChange(color)}
-                  className={`relative w-12 h-12 lg:w-16 lg:h-16 transition-all duration-300 cursor-pointer border-2 border-white
+                  className={`relative w-12 h-12 lg:w-16 lg:h-16 transition-all duration-300 cursor-pointer rounded-full
                     ${selectedColor.id === color.id ? 'scale-110 ring-4 ring-primary' : 'hover:scale-125'}`}
+                  style={{
+                    background: color.id === 'green' ? 'radial-gradient(circle at 30% 30%,rgb(154, 199, 107) 0%, #658246 100%)' :
+                              color.id === 'yellow' ? 'radial-gradient(circle at 30% 30%, #e6c447 0%, #ac942a 100%)' :
+                              color.id === 'red' ? 'radial-gradient(circle at 30% 30%, #a04950 0%, #652c31 100%)' :
+                              color.id === 'silver' ? 'radial-gradient(circle at 30% 30%, #d6d3d2 0%, #aba8a7 100%)' : 'transparent',
+                    boxShadow: 'inset -4px -4px 8px rgba(0,0,0,0.3), inset 4px 4px 8px rgba(255,255,255,0.2)'
+                  }}
                 >
-                  <Image
-                    src={color.image}
-                    alt={`${color.id} variant`}
-                    width={74}
-                    height={74}
-                    className="w-full h-full object-cover"
-                  />
                   <div
-                    className={`absolute inset-0 bg-primary/10 transition-transform duration-300
+                    className={`absolute inset-0 rounded-full transition-transform duration-300
                       ${selectedColor.id === color.id ? 'scale-110' : 'scale-100'}`}
+                    style={{
+                      background: 'linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%, rgba(0,0,0,0.2) 100%)'
+                    }}
                   />
                 </button>
               ))}
