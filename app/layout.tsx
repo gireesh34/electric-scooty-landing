@@ -2,11 +2,19 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  preload: true,
+  variable: '--font-inter',
+});
 
 export const metadata: Metadata = {
-  title: 'REZERO',
-  description: 'THE FUTURE OF ELECTRIC SCOOTER IS HERE, EXPERIENCE THE FUTURE WITH REZERO NOW!',
+  title: 'REZERO - Revolutionary Electric Scooter',
+  description: 'Experience the future of urban mobility with REZERO electric scooters. Combining style, performance, and sustainability.',
+  keywords: 'electric scooter, urban mobility, sustainable transport, REZERO',
+
+  
 };
 
 export default function RootLayout({
@@ -15,8 +23,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="en" className={`${inter.variable} scroll-smooth`}>
+      <body className={`${inter.className} antialiased bg-[#959595]`}>{children}</body>
     </html>
   );
 }
