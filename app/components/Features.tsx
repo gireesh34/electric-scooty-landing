@@ -23,37 +23,51 @@ const features = [
 
 export default function Features() {
   return (
-    <section className="h-screen mt-20">
+    <section className="h-screen mt-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.h2 
-          className="text-3xl font-bold text-center mb-12"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          Specifications
-        </motion.h2>
+          <motion.h2 
+            className="text-4xl font-bold mb-4"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+          >
+            Key Features
+          </motion.h2>
+          <p className="text-gray-900 dark:text-gray-400 max-w-2xl mx-auto">
+            Experience the perfect blend of power, efficiency, and innovation
+          </p>
+        </motion.div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {features.map((feature, index) => (
             <motion.div
               key={index}
-              className="flex flex-col items-center text-center p-6 bg-gray-50 dark:bg-gray-800 rounded-xl shadow-lg"
+              className="flex flex-col items-center text-center p-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.2 }}
               viewport={{ once: true }}
+              whileHover={{ scale: 1.02 }}
             >
-              <div className="p-3 bg-primary/10 rounded-full mb-4">
+              <motion.div 
+                className="p-4 bg-primary/10 rounded-full mb-6"
+                whileHover={{ rotate: 360 }}
+                transition={{ duration: 0.8 }}
+              >
                 {feature.icon}
-              </div>
-              <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+              </motion.div>
+              <h3 className="text-2xl font-semibold mb-3">{feature.title}</h3>
               <p className="text-gray-900 dark:text-gray-400">{feature.description}</p>
             </motion.div>
           ))}
         </div>
       </div>
-      
     </section>
   );
 }
