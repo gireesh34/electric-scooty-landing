@@ -76,16 +76,16 @@ export default function ColorSelector({ showImageSection = true }: ColorSelector
       left: '50%',
       transform: `
         translateX(-50%)
-        translateX(${position * 60}%)
-        translateZ(${position === 0 ? 0 : -200}px)
-        scale(${position === 0 ? 1 : 0.8})
-        rotateY(${position * -15}deg)
+        translateX(${position * 45}%)
+        translateZ(${position === 0 ? 0 : -150}px)
+        scale(${position === 0 ? 0.85 : 0.7})
+        rotateY(${position * -12}deg)
       `,
       zIndex: position === 0 ? 10 : 5,
       opacity: Math.abs(position) > 1 ? 0 : 1,
       transition: 'all 0.5s ease-out',
       filter: position === 0 ? 'none' : 'brightness(0.7)',
-      perspective: '2000px',
+      perspective: '1500px',
     } as const;
   };
 
@@ -104,13 +104,13 @@ export default function ColorSelector({ showImageSection = true }: ColorSelector
   };
 
   return (
-    <div className="relative w-full h-full flex items-center justify-center overflow-hidden lg:overflow-visible [perspective:2000px] [transform-style:preserve-3d]">
-      <div className="w-full h-full py-2 md:py-4 lg:py-8 overflow-x-hidden lg:overflow-x-visible">
-        <div className="container h-full mx-auto px-2 sm:px-2 md:px-4 relative">
-          <div className="flex flex-col lg:flex-row items-center justify-center h-full gap-4 lg:gap-12">
+    <div className="fixed bottom-0 left-0 right-0 w-full flex items-center justify-center overflow-hidden lg:overflow-visible [perspective:2000px] [transform-style:preserve-3d] z-50 p-0 m-0 mb-0 pb-0">
+      <div className="w-full overflow-x-hidden lg:overflow-x-visible p-0 m-0 mb-0 pb-0">
+        <div className="container h-full mx-auto relative p-0 m-0 mb-0 pb-0">
+          <div className="flex flex-col lg:flex-row items-center justify-center h-full gap-4 lg:gap-12 mb-0 pb-0">
             {/* Image Carousel Section */}
             <div className="flex-1 flex justify-center items-center w-full h-full max-w-5xl [perspective:2000px]">
-              <div className="relative w-full h-[50vh] md:h-[60vh] lg:h-[80vh] [transform-style:preserve-3d]">
+              <div className="relative w-full h-[75vh] md:h-[85vh] lg:h-[95vh] [transform-style:preserve-3d]">
                 {colors.map((color, index) => (
                   <div
                     key={color.id}
@@ -165,7 +165,7 @@ export default function ColorSelector({ showImageSection = true }: ColorSelector
                     
                     {selectedIndex === index && (
                       <div 
-                        className="absolute bottom-4 md:bottom-6 lg:bottom-8 left-1/2 -translate-x-1/2 w-[85%] md:w-[80%] lg:w-[50%] h-4 bg-black/80 blur-xl rounded-full"
+                        className="absolute bottom-6 md:bottom-6 lg:bottom-8 left-1/2 -translate-x-1/2 w-[85%] md:w-[80%] lg:w-[50%] h-8 md:h-4 lg:h-4 bg-black/80 blur-2xl md:blur-xl lg:blur-xl rounded-full"
                         style={{
                           animation: 'shadowFloat 3s ease-in-out infinite'
                         }}
@@ -195,10 +195,9 @@ export default function ColorSelector({ showImageSection = true }: ColorSelector
             {/* Color Selection Section */}
             <div 
               ref={containerRef}
-              className="absolute bottom-4 sm:bottom-6 md:bottom-8 lg:bottom-10 left-0 right-0
+              className="absolute bottom-8 sm:bottom-10 md:bottom-12 lg:bottom-14 left-0 right-0
                 flex flex-row justify-center items-center gap-3 sm:gap-4 md:gap-6 lg:gap-8
-                p-2 sm:p-3 z-20"
-            >
+                p-0 sm:p-0 md:p-0 lg:p-0 z-20 mb-0 pb-0 translate-y-0">
               {colors.map((color, index) => (
                 <button
                   key={color.id}
@@ -244,6 +243,7 @@ export default function ColorSelector({ showImageSection = true }: ColorSelector
           50% { 
             transform: translateX(-50%) scale(0.85);
             opacity: 0.6;
+            filter: blur(24px);
           }
         }
       `}</style>
