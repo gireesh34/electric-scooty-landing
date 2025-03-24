@@ -25,13 +25,18 @@ export default function Design() {
   const calculatePosition = (index: number, total: number, radius: number) => {
     // For triangle, we want to start from the top and space items 120 degrees apart
     const angle = (index * (2 * Math.PI / 3)) + (Math.PI / 2);
-    const x = Math.cos(angle) * radius;
-    const y = Math.sin(angle) * radius;
+    // Adjust radius based on screen size
+    const adjustedRadius = typeof window !== 'undefined' ? 
+      window.innerWidth < 640 ? radius * 0.6 : 
+      window.innerWidth < 768 ? radius * 0.8 : 
+      radius : radius;
+    const x = Math.cos(angle) * adjustedRadius;
+    const y = Math.sin(angle) * adjustedRadius;
     return { x, y };
   };
 
   return (
-    <section className="min-h-[600px] sm:min-h-[700px] md:min-h-[800px] flex items-center justify-center py-8 sm:py-10 md:py-12">
+    <section className="min-h-[600px] sm:min-h-[700px] md:min-h-[800px] flex items-center justify-center py-8 sm:py-10 md:py-12 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -84,7 +89,7 @@ export default function Design() {
                   </div>
 
                   <div 
-                    className="absolute bg-white dark:bg-gray-900 p-2 sm:p-3 rounded-lg shadow-lg min-w-[180px] sm:min-w-[220px] -translate-x-[calc(100%+20px)] -top-[15px] data-[position=right]:translate-x-[calc(100%+20px)] data-[position=right]:right-0 backdrop-blur-sm bg-opacity-90 dark:bg-opacity-90 transition-all duration-300 hover:scale-105"
+                    className="absolute bg-white dark:bg-gray-900 p-2 sm:p-3 rounded-lg shadow-lg min-w-[140px] sm:min-w-[180px] md:min-w-[220px] -translate-x-[calc(100%+10px)] sm:-translate-x-[calc(100%+20px)] -top-[15px] data-[position=right]:translate-x-[calc(100%+10px)] sm:data-[position=right]:translate-x-[calc(100%+20px)] data-[position=right]:right-0 backdrop-blur-sm bg-opacity-90 dark:bg-opacity-90 transition-all duration-300 hover:scale-105"
                     data-position={position.x > 0 ? 'right' : 'left'}
                   >
                     <h3 className="text-xs sm:text-sm font-medium text-gray-900 dark:text-gray-400">

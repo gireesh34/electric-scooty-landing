@@ -27,13 +27,18 @@ const features = [
 export default function Features() {
   const calculatePosition = (index: number, total: number, radius: number) => {
     const angle = (index / total) * 2 * Math.PI - Math.PI / 2;
-    const x = Math.cos(angle) * radius;
-    const y = Math.sin(angle) * radius;
+    // Adjust radius based on screen size
+    const adjustedRadius = typeof window !== 'undefined' ? 
+      window.innerWidth < 640 ? radius * 0.2 : 
+      window.innerWidth < 768 ? radius * 0.2 : 
+      radius : radius;
+    const x = Math.cos(angle) * adjustedRadius;
+    const y = Math.sin(angle) * adjustedRadius;
     return { x, y };
   };
 
   return (
-    <section className="min-h-[600px] sm:min-h-[700px] md:min-h-[800px] flex items-center justify-center py-8 sm:py-10 md:py-12">
+    <section className="min-h-[600px] sm:min-h-[700px] md:min-h-[800px] flex items-center justify-center py-8 sm:py-10 md:py-12 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           className="text-center mb-8 sm:mb-12 md:mb-16"
@@ -91,7 +96,7 @@ export default function Features() {
                   </div>
 
                   <div 
-                    className="absolute bg-white dark:bg-gray-900 p-2 sm:p-3 rounded-lg shadow-lg min-w-[120px] sm:min-w-[150px] -translate-x-[calc(100%+15px)] -top-[15px] data-[position=right]:translate-x-[calc(100%+15px)] data-[position=right]:right-0"
+                    className="absolute bg-white dark:bg-gray-900 p-2 sm:p-3 rounded-lg shadow-lg min-w-[100px] sm:min-w-[120px] md:min-w-[150px] -translate-x-[calc(100%+10px)] sm:-translate-x-[calc(100%+15px)] -top-[15px] data-[position=right]:translate-x-[calc(100%+10px)] sm:data-[position=right]:translate-x-[calc(100%+15px)] data-[position=right]:right-0"
                     data-position={position.x > 0 ? 'right' : 'left'}
                   >
                     <h3 className="text-xs sm:text-sm font-medium text-gray-900 dark:text-gray-400">
