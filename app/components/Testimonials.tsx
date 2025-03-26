@@ -44,7 +44,7 @@ export default function Testimonials() {
           {testimonials.map((testimonial, index) => (
             <motion.div
               key={index}
-              className="bg-gray-50 dark:bg-gray-900 p-4 sm:p-5 md:p-6 rounded-xl"
+              className="bg-white/30 dark:bg-gray-900/30 backdrop-blur-md border border-white/20 dark:border-gray-700/30 p-4 sm:p-5 md:p-6 rounded-xl shadow-lg"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.2 }}
