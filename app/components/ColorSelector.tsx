@@ -84,7 +84,7 @@ export default function ColorSelector({ showImageSection = true }: ColorSelector
   };
 
   return (
-    <div className="relative w-full flex items-center justify-center overflow-hidden [perspective:2000px] [transform-style:preserve-3d] z-50 p-0 m-0 mb-0 pb-0">
+    <div className="relative w-full flex items-center justify-center overflow-hidden [perspective:2000px] [transform-style:preserve-3d] z-50 p-0 m-0 mb-0 pb-0 touch-auto">
       <div className="w-full overflow-x-hidden lg:overflow-x-visible p-0 m-0 mb-0 pb-0">
         <div className="container h-full mx-auto relative p-0 m-0 mb-0 pb-0">
           <div className="flex flex-col lg:flex-row items-center justify-center h-full gap-4 lg:gap-16 mb-0 pb-0">
@@ -95,13 +95,13 @@ export default function ColorSelector({ showImageSection = true }: ColorSelector
                   <div
                     key={color.id}
                     className={`absolute w-full h-full cursor-pointer [transform-style:preserve-3d] select-none 
-                    touch-none [-webkit-tap-highlight-color:transparent] ${
+                    touch-auto [-webkit-tap-highlight-color:transparent] ${
                       !isLoaded && index !== 0 ? 'invisible' : ''
                     }`}
                     style={{
                       ...calculateImageStyles(index),
                       WebkitTapHighlightColor: 'transparent',
-                      touchAction: 'none'
+                      touchAction: 'auto'
                     }}
                     onClick={() => selectedIndex === index ? handleFlip() : handleColorChange(color, index)}
                   >
